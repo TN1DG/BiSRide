@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { riderProfileSchema, type RiderProfileFormData } from "@/lib/validators";
 import { updateUserProfile } from "@/lib/firebase/auth";
-import { uploadProfilePhoto } from "@/lib/firebase/storage";
+import { uploadProfilePhoto } from "@/lib/supabase/storage";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { getInitials } from "@/lib/utils";
 

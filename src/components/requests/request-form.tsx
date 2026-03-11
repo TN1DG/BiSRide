@@ -36,7 +36,7 @@ export function RequestForm() {
         status: "open",
         description: data.description,
         packageSize: data.packageSize,
-        packageWeight: data.packageWeight,
+        ...(data.packageWeight != null && { packageWeight: data.packageWeight }),
         pickupAddress: data.pickupAddress,
         pickupLocation: new GeoPoint(6.5244, 3.3792), // Default Lagos coords
         dropoffAddress: data.dropoffAddress,
