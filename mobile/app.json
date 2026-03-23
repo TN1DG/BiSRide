@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "BiSRide",
+    "slug": "bisride",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1B5E20"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bisride.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "BiSRide needs your location to track deliveries.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "BiSRide needs background location access to track active deliveries.",
+        "NSCameraUsageDescription": "BiSRide needs camera access to capture delivery proof photos.",
+        "NSPhotoLibraryUsageDescription": "BiSRide needs photo library access to upload delivery proof."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1B5E20"
+      },
+      "package": "com.bisride.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      "expo-location",
+      "expo-notifications",
+      "expo-image-picker",
+      "expo-secure-store",
+      [
+        "expo-task-manager",
+        {
+          "backgroundLocation": true
+        }
+      ],
+      "expo-asset"
+    ]
+  }
+}

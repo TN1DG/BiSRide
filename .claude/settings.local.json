@@ -9,7 +9,15 @@
       "Bash(npm run:*)",
       "Bash(gh auth:*)",
       "Bash(gh repo:*)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Bash(grep -r \"TODO\\\\|FIXME\\\\|XXX\\\\|HACK\\\\|BUG\" /c/Users/tella/OneDrive/Desktop/BiSRide/mobile/src --include=*.ts --include=*.tsx)",
+      "Bash(node -e \"console.log\\(require\\(''firebase/package.json''\\).version\\)\")",
+      "Bash(ls:*)",
+      "Bash(cd:*)",
+      "Bash(node -e \"console.log\\(require\\(''expo/package.json''\\).version\\)\")",
+      "Bash(npm view:*)",
+      "Bash(node -e \"console.log\\(''Expo:'', require\\(''expo/package.json''\\).version, ''| React:'', require\\(''react/package.json''\\).version, ''| RN:'', require\\(''react-native/package.json''\\).version\\)\")",
+      "Bash(git add:*)"
     ]
   }
 }
