@@ -27,6 +27,7 @@ export default function ProposalsScreen() {
   const profile = useAuthStore((s) => s.profile);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!profile) return;
@@ -35,6 +36,11 @@ export default function ProposalsScreen() {
       (data) => {
         setProposals(data);
         setLoading(false);
+        setError(null);
+      },
+      (err) => {
+        setLoading(false);
+        setError(err.message);
       }
     );
     return () => unsub();
@@ -74,6 +80,16 @@ export default function ProposalsScreen() {
       <View style={styles.loader}>
         <ActivityIndicator color={colors.primary} />
       </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        icon="alert-circle-outline"
+        title="Couldn't load proposals"
+        subtitle="Please check your connection and try again."
+      />
     );
   }
 

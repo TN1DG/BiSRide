@@ -90,15 +90,23 @@ export async function updateProposal(id: string, data: Partial<Proposal>) {
 
 export function subscribeToProposals(
   constraints: QueryConstraint[],
-  callback: (proposals: Proposal[]) => void
+  callback: (proposals: Proposal[]) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(collection(db, "proposals"), ...constraints);
-  return onSnapshot(q, (snapshot) => {
-    const proposals = snapshot.docs.map(
-      (d) => ({ id: d.id, ...d.data() } as Proposal)
-    );
-    callback(proposals);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const proposals = snapshot.docs.map(
+        (d) => ({ id: d.id, ...d.data() } as Proposal)
+      );
+      callback(proposals);
+    },
+    (error) => {
+      console.error("subscribeToProposals error:", error);
+      onError?.(error);
+    }
+  );
 }
 
 // Conversations
@@ -114,19 +122,27 @@ export async function createConversation(
 
 export function subscribeToConversations(
   userId: string,
-  callback: (conversations: Conversation[]) => void
+  callback: (conversations: Conversation[]) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(
     collection(db, "conversations"),
     where("participants", "array-contains", userId),
     orderBy("lastMessageAt", "desc")
   );
-  return onSnapshot(q, (snapshot) => {
-    const conversations = snapshot.docs.map(
-      (d) => ({ id: d.id, ...d.data() } as Conversation)
-    );
-    callback(conversations);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const conversations = snapshot.docs.map(
+        (d) => ({ id: d.id, ...d.data() } as Conversation)
+      );
+      callback(conversations);
+    },
+    (error) => {
+      console.error("subscribeToConversations error:", error);
+      onError?.(error);
+    }
+  );
 }
 
 // Messages

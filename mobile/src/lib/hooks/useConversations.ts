@@ -8,17 +8,26 @@ import type { Conversation, Message } from "@/lib/types";
 export function useConversations(userId: string | undefined) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) return;
-    const unsub = subscribeToConversations(userId, (data) => {
-      setConversations(data);
-      setLoading(false);
-    });
+    const unsub = subscribeToConversations(
+      userId,
+      (data) => {
+        setConversations(data);
+        setLoading(false);
+        setError(null);
+      },
+      (err) => {
+        setLoading(false);
+        setError(err.message);
+      }
+    );
     return () => unsub();
   }, [userId]);
 
-  return { conversations, loading };
+  return { conversations, loading, error };
 }
 
 export function useMessages(conversationId: string | undefined) {

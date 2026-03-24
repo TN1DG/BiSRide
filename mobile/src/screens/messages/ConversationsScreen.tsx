@@ -13,13 +13,23 @@ type Props = NativeStackScreenProps<MessagesStackParamList, "ConversationsList">
 
 export default function ConversationsScreen({ navigation }: Props) {
   const profile = useAuthStore((s) => s.profile);
-  const { conversations, loading } = useConversations(profile?.uid);
+  const { conversations, loading, error } = useConversations(profile?.uid);
 
   if (loading) {
     return (
       <View style={styles.loader}>
         <ActivityIndicator color={colors.primary} />
       </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        icon="alert-circle-outline"
+        title="Couldn't load messages"
+        subtitle="Please check your connection and try again."
+      />
     );
   }
 
