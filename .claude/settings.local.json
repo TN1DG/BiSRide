@@ -17,7 +17,11 @@
       "Bash(node -e \"console.log\\(require\\(''expo/package.json''\\).version\\)\")",
       "Bash(npm view:*)",
       "Bash(node -e \"console.log\\(''Expo:'', require\\(''expo/package.json''\\).version, ''| React:'', require\\(''react/package.json''\\).version, ''| RN:'', require\\(''react-native/package.json''\\).version\\)\")",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(eas build:configure)",
+      "Bash(eas build:*)"
     ]
   }
 }
