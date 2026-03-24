@@ -13,6 +13,9 @@ import ConversationsScreen from "@/screens/messages/ConversationsScreen";
 import ChatScreen from "@/screens/messages/ChatScreen";
 import SettingsScreen from "@/screens/settings/SettingsScreen";
 
+import { useAuthStore } from "@/lib/stores/authStore";
+import { useUnreadCount } from "@/lib/hooks/useUnreadCount";
+
 import type {
   BusinessTabParamList,
   BusinessRequestsStackParamList,
@@ -64,6 +67,9 @@ function MessagesNavigator() {
 }
 
 export default function BusinessTabs() {
+  const profile = useAuthStore((s) => s.profile);
+  const unreadCount = useUnreadCount(profile?.uid);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -109,6 +115,8 @@ export default function BusinessTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="message-text" size={size} color={color} />
           ),
+          tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
+          tabBarBadgeStyle: { backgroundColor: colors.primary },
         }}
       />
       <Tab.Screen

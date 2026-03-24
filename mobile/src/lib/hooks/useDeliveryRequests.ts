@@ -10,6 +10,7 @@ export function useDeliveryRequests(filters?: {
 }) {
   const [requests, setRequests] = useState<DeliveryRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const constraints = [];
@@ -21,13 +22,21 @@ export function useDeliveryRequests(filters?: {
       constraints.push(where("status", "==", filters.status));
     constraints.push(orderBy("createdAt", "desc"));
 
-    const unsub = subscribeToDeliveryRequests(constraints, (data) => {
-      setRequests(data);
-      setLoading(false);
-    });
+    const unsub = subscribeToDeliveryRequests(
+      constraints,
+      (data) => {
+        setRequests(data);
+        setLoading(false);
+        setError(null);
+      },
+      (err) => {
+        setLoading(false);
+        setError(err.message);
+      }
+    );
 
     return () => unsub();
   }, [filters?.businessId, filters?.riderId, filters?.status]);
 
-  return { requests, loading };
+  return { requests, loading, error };
 }

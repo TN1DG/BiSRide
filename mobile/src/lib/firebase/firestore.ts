@@ -50,15 +50,23 @@ export async function updateDeliveryRequest(
 
 export function subscribeToDeliveryRequests(
   constraints: QueryConstraint[],
-  callback: (requests: DeliveryRequest[]) => void
+  callback: (requests: DeliveryRequest[]) => void,
+  onError?: (error: Error) => void
 ): Unsubscribe {
   const q = query(collection(db, "deliveryRequests"), ...constraints);
-  return onSnapshot(q, (snapshot) => {
-    const requests = snapshot.docs.map(
-      (d) => ({ id: d.id, ...d.data() } as DeliveryRequest)
-    );
-    callback(requests);
-  });
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const requests = snapshot.docs.map(
+        (d) => ({ id: d.id, ...d.data() } as DeliveryRequest)
+      );
+      callback(requests);
+    },
+    (error) => {
+      console.error("subscribeToDeliveryRequests error:", error);
+      onError?.(error);
+    }
+  );
 }
 
 export async function getDeliveryRequest(

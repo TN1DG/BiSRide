@@ -19,7 +19,7 @@ type Props = NativeStackScreenProps<RiderBrowseStackParamList, "BrowseList">;
 const PACKAGE_SIZES = ["all", "small", "medium", "large", "extra_large"] as const;
 
 export default function BrowseScreen({ navigation }: Props) {
-  const { requests, loading } = useDeliveryRequests({ status: "open" });
+  const { requests, loading, error } = useDeliveryRequests({ status: "open" });
   const [search, setSearch] = useState("");
   const [sizeFilter, setSizeFilter] = useState("all");
 
@@ -67,6 +67,12 @@ export default function BrowseScreen({ navigation }: Props) {
 
       {loading ? (
         <ActivityIndicator style={styles.loader} color={colors.primary} />
+      ) : error ? (
+        <EmptyState
+          icon="alert-circle-outline"
+          title="Couldn't load requests"
+          subtitle="Please check your connection and try again."
+        />
       ) : filtered.length === 0 ? (
         <EmptyState
           icon="magnify"

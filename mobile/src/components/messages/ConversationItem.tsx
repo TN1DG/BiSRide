@@ -36,7 +36,11 @@ export default function ConversationItem({
       )}
       <View style={styles.content}>
         <View style={styles.top}>
-          <Text variant="titleSmall" numberOfLines={1} style={styles.name}>
+          <Text
+            variant="titleSmall"
+            numberOfLines={1}
+            style={[styles.name, unread > 0 && styles.bold]}
+          >
             {otherName}
           </Text>
           {conversation.lastMessageAt && (
@@ -50,7 +54,7 @@ export default function ConversationItem({
         <View style={styles.bottom}>
           <Text
             variant="bodySmall"
-            style={styles.lastMessage}
+            style={[styles.lastMessage, unread > 0 && styles.unreadMessage]}
             numberOfLines={1}
           >
             {conversation.lastMessage || "No messages yet"}
@@ -99,6 +103,13 @@ const styles = StyleSheet.create({
   lastMessage: {
     color: colors.textSecondary,
     flex: 1,
+  },
+  bold: {
+    fontWeight: "700",
+  },
+  unreadMessage: {
+    fontWeight: "600",
+    color: colors.text,
   },
   badge: {
     backgroundColor: colors.primary,

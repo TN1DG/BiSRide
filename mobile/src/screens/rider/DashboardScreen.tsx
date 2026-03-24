@@ -14,9 +14,9 @@ export default function RiderDashboardScreen() {
   const navigation = useNavigation<any>();
   const profile = useAuthStore((s) => s.profile);
 
-  const { requests: myDeliveries, loading: loadingMine } =
+  const { requests: myDeliveries, loading: loadingMine, error: errorMine } =
     useDeliveryRequests({ riderId: profile?.uid });
-  const { requests: openRequests, loading: loadingOpen } =
+  const { requests: openRequests, loading: loadingOpen, error: errorOpen } =
     useDeliveryRequests({ status: "open" });
 
   const activeDeliveries = myDeliveries.filter(
@@ -127,6 +127,12 @@ export default function RiderDashboardScreen() {
 
       {loadingOpen ? (
         <ActivityIndicator style={styles.loader} color={colors.primary} />
+      ) : errorOpen ? (
+        <EmptyState
+          icon="alert-circle-outline"
+          title="Couldn't load requests"
+          subtitle="Please check your connection and try again."
+        />
       ) : openRequests.length === 0 ? (
         <EmptyState
           icon="package-variant"
