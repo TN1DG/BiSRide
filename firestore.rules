@@ -3,26 +3,41 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Helper: get the current user's role
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
     // Users collection
     match /users/{userId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.auth.uid == userId;
-      allow update: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId
+        // Prevent users from changing their own role
+        && request.resource.data.role == resource.data.role
+        // Prevent users from tampering with stats (only Cloud Functions should update these)
+        && request.resource.data.averageRating == resource.data.averageRating
+        && request.resource.data.totalDeliveries == resource.data.totalDeliveries;
       allow delete: if false;
     }
 
     // Delivery Requests
     match /deliveryRequests/{requestId} {
-      allow read: if request.auth != null;
+      // Businesses see their own requests, riders see open requests or ones assigned to them
+      allow read: if request.auth != null && (
+        resource.data.businessId == request.auth.uid ||
+        resource.data.status == "open" ||
+        resource.data.riderId == request.auth.uid
+      );
       allow create: if request.auth != null
         && request.resource.data.businessId == request.auth.uid
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "business";
+        && userRole() == "business";
       allow update: if request.auth != null && (
         // Business can update their own requests
         resource.data.businessId == request.auth.uid ||
         // Riders can accept open requests
         (resource.data.status == "open" && request.resource.data.status == "accepted"
-          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "rider") ||
+          && userRole() == "rider") ||
         // Assigned rider can update status
         resource.data.riderId == request.auth.uid
       );
@@ -37,7 +52,7 @@ service cloud.firestore {
       );
       allow create: if request.auth != null
         && request.resource.data.riderId == request.auth.uid
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "rider";
+        && userRole() == "rider";
       allow update: if request.auth != null && (
         resource.data.businessId == request.auth.uid ||
         resource.data.riderId == request.auth.uid
